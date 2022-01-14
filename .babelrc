@@ -1,0 +1,13 @@
+{
+  //바벨을 설정할 수 있는 하일
+  "presets": ["next/babel"],
+  "plugins": [
+    [
+      "styled-components",
+      {
+        "ssr": true
+      }
+    ],
+    "inline-react-svg" //yarn add babel-plugin-inline-react-svg
+  ]
+}
