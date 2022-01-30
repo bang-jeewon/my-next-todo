@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 import palette from "../styles/palette";
 import { TodoType } from "../types/todo";
 
 import TrashCanIcon from "../public/statics/svg/trashcan.svg";
 import CheckMarkIcon from "../public/statics/svg/checkmark.svg";
+import { checkTodoAPI } from "../lib/api/todos";
+import { useRouter } from "next/router";
 
 const Container = styled.div`
   width: 100%;
@@ -129,6 +131,31 @@ interface IProps {
 
 // eslint-disable-next-line react/function-component-definition
 const TodoList: React.FC<IProps> = ({ todos }) => {
+  const [localTodos, setLocalTodos] = useState(todos);
+
+  //* 투두 체크하기
+  const checkTodo = async (id: number) => {
+    try {
+      await checkTodoAPI(id);
+      console.log("체크하였습니다.");
+
+      // router.reload(); //데이터 다시 받기
+
+      // router.push("/"); //데이터 다시 받기
+
+      //data를 local로 저장하여 사용하기
+      const newTodos = localTodos.map((todo) => {
+        if (todo.id === id) {
+          return { ...todos, checkd: !todo.checked };
+        }
+        return todo;
+      });
+      setLocalTodos(newTodos);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   /** todos의 타입이 IProps를 따름 !!!!! */
   /** React.FC의 타입은 '<>'은 제네릭이라고 읽으며
    * 여기서는 P(props)라는 타입(기본 값은 {} 객체?)을 제네릭을 사용하여
@@ -144,7 +171,7 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
     let green = 0;
     let blue = 0;
     let navy = 0;
-    todos.forEach((todo) => {
+    localTodos.forEach((todo) => {
       //하나의 값에 대한 조건문은 switch 사용 편리
       switch (todo.color) {
         case "red":
@@ -180,7 +207,7 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
     <Container>
       <div className='todo-list-header'>
         <p className='todo-list-last-todo'>
-          남은 TODO<span>{todos.length}개</span>
+          남은 TODO<span>{localTodos.length}개</span>
         </p>
         <div className='todo-list-header-colors'>
           {Object.keys(todoColorNums).map((color, index) => (
@@ -192,7 +219,7 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
         </div>
       </div>
       <ul className='todo-list'>
-        {todos.map((todo) => (
+        {localTodos.map((todo) => (
           <li className='todo-item' key={todo.id}>
             <div className='todo-left-side'>
               <div className={`todo-color-block bg-${todo.color}`} />
@@ -218,7 +245,9 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
                 <button
                   type='button'
                   className='todo-button'
-                  onClick={() => {}}
+                  onClick={() => {
+                    checkTodo(todo.id);
+                  }}
                 />
               )}
             </div>
