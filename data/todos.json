@@ -1,5 +1,1 @@
-[
-  { "id": 1, "text": "마커 이동하기", "color": "red", "checked": true },
-  { "id": 2, "text": "인원 컴포넌트", "color": "navy", "checked": false },
-  { "id": 3, "text": "400에러 원인", "color": "yellow", "checked": false }
-]
+[{"id":1,"text":"마커 이동하기","color":"red","checked":true},{"id":2,"text":"인원 컴포넌트","color":"navy","checked":false},{"id":3,"text":"400에러 원인","color":"yellow","checked":false},{"id":4,"text":"하","color":"navy","checked":true}]
